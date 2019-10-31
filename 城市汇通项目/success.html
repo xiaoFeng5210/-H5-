@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>受理页面</title>
+    <link rel="stylesheet" href="./assets/css/success.css">
+</head>
+<body>
+    <div class="wrapper">
+        <img class="icon" src="./assets/img/success.png" alt="受理中">
+        <p class="title">受理中</p>
+        <p>
+            兑换操作已受理，最终兑换结果以短信形式
+            通知您，请留意短信！                        
+        </p>
+        <div class="back">返回</div>
+    </div>
+    
+    <script src="./assets/js/jquery-1.10.2.js"></script>
+    <script>
+            $('.back').on('click',function(){
+                 //跳转页面
+                window.location.href = "index.html"
+            })
+    </script>
+</body>
+</html>

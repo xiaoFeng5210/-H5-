@@ -1,0 +1,36 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+.wrapper{
+    width: 66.25vw;
+    margin: auto;
+    padding-top: 24vw;
+    text-align: center;
+}
+.icon{
+    width: 34.8vw;
+    margin: auto;
+}
+p{
+    color: #666666;
+    font-size: 13px;
+    font-family:Alibaba PuHuiTi;
+    font-weight:bold;
+}
+.title{
+    padding: 4.35vw 0 3.88vw;
+    color: #569AFF;
+    font-size: 18px;
+}
+.back{
+    width:40vw;
+    margin: auto;
+    margin-top: 18.12vw;
+    line-height: 34px;
+    border:1px solid rgba(86,154,255,1);
+    border-radius:17px;
+    color:#569AFF; 
+}

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="yes" name="apple-touch-fullscreen">
+	<meta content="telephone=no,email=no" name="format-detection">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>券码兑换</title>
+	<script type="text/javascript" src="assets/js/flexible.js"></script>
+	<script type="text/javascript" src="assets/js/zepto.min.js"></script>
+	<script type="text/javascript" src="assets/js/fastclick.js"></script>
+	<link rel="stylesheet" href="assets/css/index.css">
+	<link rel="stylesheet" href="assets/css/animate.min.css">
+</head>
+
+<body>
+	<div id="app" class="animated fadeIn">
+		<div class="content">
+            <img class="head"src="./assets/img/headimg.png" alt="充值中心">
+			<!-- 券码 -->
+			<div class="border-1px input-block code" id="code">
+				<!-- <span></span> -->
+				<input type="text" class="code-value" placeholder="请输入正确的券码" onkeyup="this.value=this.value.replace(/\s+/g,'')">
+			</div>
+
+			<!-- 手机号 -->
+			<div class="border-1px input-block phone" id="phone" style="display: none;">
+				<!-- <span></span> -->
+				<input type="tel" placeholder="请输入正确的手机号" onkeyup="this.value=this.value.replace(/\s+/g,'')">
+			</div>
+
+			<!-- 第三方账号 -->
+			<div class="border-1px input-block account" id="account" style="display: none;">
+			     <input type="text" placeholder="请输入正确的xxx号码">
+			</div>
+
+			<!-- 账号提示 -->
+			<div class="tips" style="display: none;"></div>
+
+			<!-- 校验券码按钮 -->
+			<div class="btn check-code" id="check-code">券码校验</div>
+
+			<!-- 立即兑换按钮 -->
+			<div class="btn exchange" id="exchange" style="display: none;">立即兑换</div>
+
+			<!-- 兑换规则 -->
+			<div class="rules">
+				<!-- <div class="title">
+					<span><img src="assets/img/icon4.png"></span>
+					<span>兑换规则</span>
+					<span><img src="assets/img/icon5.png"></span>
+				</div> -->
+				<div class="list">
+					<div class="title-mix">温馨提示</div>
+					<p>1、用户必须仔细输入并核对所需充值的手机号码，因人为输入错误而造成的损失将由用户承担;</p>
+					<p>2、由于充值账户(手机号码) 的本身问题导致充值失败而造成的损失，由用户自己承担; </p>
+					<p>3、充值成功后，可以登录芒果视频官网或APP，查询会员有效期; </p>
+					<p>4、如因用户未妥善保管充值码而造成的损失，由用户自己承担; </p>
+					<p>5、如果有使用问题请联系客服9501357111。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 遮罩层 -->
+	<div class="animated fadeIn maske" id="maske" style="display: none;"></div>
+
+	<!-- 无网络弹窗 -->
+	<div class="animated fadeIn no-network-maske" id="no-network-maske" style="display: none;">
+		<div class="animated zoomIn faster win-box no-network-toast">
+		<div class="icon"><img src="assets/img/icon7.png"></div>
+		<div class="text">网络正忙，请稍后重试！</div>
+	   </div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			// 去掉点击300延时
+			$(function() {
+				FastClick.attach(document.body);
+			});
+
+			// 是否有第三方账号 0 没有 1有
+			var needAccount = '0';
+			// 第三方账号类型 qq 微博
+			var thirdAccountType = '';
+
+			// qq输入空格限制
+			$(document).on('keyup', '#check-qq', function () {
+				this.value=this.value.replace(/\s+/g,'')
+			})
+
+			// 无网络显示
+			function toastNoNetworkShow () {
+				var noNetworkMaske = $('#no-network-maske')
+				noNetworkMaske.show();
+				setTimeout(function () {
+					noNetworkMaske.addClass('fadeOut').find('.no-network-toast').addClass('zoomOut');
+					setTimeout(function () {
+						noNetworkMaske.removeClass('fadeOut').hide().find('.no-network-toast').removeClass('zoomOut');
+					}, 500)
+				}, 3000)
+			}
+
+			// 显示提示框
+			function toastShow (text, icon, toastType) {
+				// 加载中提示框
+				var loadingCls = ''
+				if (toastType == 'loading') {
+					loadingCls = 'loading'
+				}
+                 
+				// toast
+				var toastStr = '<div class="animated zoomIn faster win-box toast ' + loadingCls + '"><div class="icon"><img src="assets/img/' + icon + '.png"></div><div class="text">' + text + '</div></div>';
+				
+				// 显示
+				var maske = $('#maske');
+				maske.html(toastStr).show();
+
+				// toastType == prompt 才会自动关闭
+				if (toastType == 'prompt') {
+					setTimeout(function () {
+						maske.addClass('fadeOut').find('.toast').addClass('zoomOut');
+						setTimeout(function () {
+							maske.removeClass('fadeOut').hide().find('.toast').remove();
+						}, 500)
+					}, 3000)
+				}
+			}
+
+			// 关闭 toast
+			function maskeHide () {
+				var maske = $('#maske')
+				maske.addClass('fadeOut').find('.win-box').addClass('zoomOut');
+				setTimeout(function () {
+					maske.removeClass('fadeOut').hide().find('.win-box').remove();
+				}, 500)
+			}
+
+			// 显示 confirm
+			function confirmShow (html) {
+				var maske = $('#maske');
+				maske.html(html).show();
+			}
+
+			// 券码校验
+			$(document).on('click', '#check-code', function () {
+				var codeVal = $('#code input').val();
+				// 券码不能为空
+				if (!codeVal) {
+					toastShow('券码不能为空', 'icon6', 'prompt');
+					return;
+				} else {
+					// 校验
+					toastShow('校验中...', 'icon8', 'loading');
+					$.get('https://testing.tech.chongplus.cn/unicom-city-api/coupon/verify/checked/'+ codeVal, function (res) {
+						var data = JSON.parse(res);
+            if (data.success) {
+							// 校验成功禁止更改
+							$('#code input').attr('readonly', 'readonly');
+							// 关闭toast
+							setTimeout(function () {
+								maskeHide();
+								// 隐藏校验按钮
+								$('#check-code').hide();
+
+								// 显示兑换按钮
+								$('#exchange').show();
+
+								// 显示手机号、第三方账号输入框
+								$('#phone').show();
+								$('#account').show();
+								// 1 为有第三方账号
+								if (data.data.needAccount == '1') {
+									var account = $('#account'); 
+									account.show();
+									needAccount = data.data.needAccount;
+									thirdAccountType = data.data.thirdAccountType;
+									$('.tips').html('<span>*</span><span class="tips-text">仅支持'+ thirdAccountType + ',不支持'+ thirdAccountType + '绑定的手机号或邮箱</span>').show();
+									// 第三方账号类型
+									if (thirdAccountType == 'QQ号') {
+										account.html('<span class="qq-icon"></span><input type="tel" id="check-qq" placeholder="请输入正确的QQ号">')
+									} else {
+										account.html('<span class="weibo-icon"></span><input type="text" placeholder="请输入' + thirdAccountType + '账号">')
+									}
+								}else{
+									$('#account').hide();
+								}
+								
+							}, 1000)
+						} else {
+							toastShow(data.errorMsg, 'icon6', 'prompt');
+						}
+					}, function (res) {
+						maskeHide();
+						setTimeout(function () {
+							toastNoNetworkShow();
+						}, 500)
+					})
+				}
+			});
+
+			// 立即兑换
+			$(document).on('click', '#exchange', function () {
+				var reg = /^1[3456789]\d{9}$/;
+				var phoneVal = $('#phone input').val();
+				var codeVal = $('#code input').val();
+				if (phoneVal == '') {
+					toastShow('手机号不能为空', 'icon6', 'prompt');
+					return;
+				}
+				if (!reg.test(phoneVal)) {
+					toastShow('请输入正确的手机号', 'icon6', 'prompt');
+					return;
+				}
+
+				// 有第三方账号
+				var accountVal = $('#account input').val();
+				if (needAccount == '1') {
+					// 第三方账号为QQ号
+					if (thirdAccountType == 'QQ号') { //QQ号正则判定
+						var accReg = /^[1-9][0-9]{4,10}$/g;
+						if (accountVal == '') {
+							toastShow('QQ号不能为空', 'icon6', 'prompt');
+							return;
+						}
+						if (!accReg.test(accountVal)) {
+							toastShow('请输入正确的QQ号', 'icon6', 'prompt');
+							return;
+						}
+					} else {
+						// 其它第三方账号 不能为空
+						if (accountVal == '') {
+							toastShow('账号不能为空', 'icon6', 'prompt');
+							return;
+						}
+					}
+					// 有三方账号
+					var confirmStr = '<div class="animated zoomIn faster win-box confirm">'+
+						'<div class="border-bottom-1px confirm-content">'+
+							'您的手机号码为：<span>' + phoneVal + ' </span>'+
+							'确认将券码：<span>' + codeVal + ' </span>'+
+							'兑换至' + thirdAccountType + '：<span>' + accountVal + ' </span>吗？</div>'+
+						'<div class="confirm-btn"><div class="border-right-1px confirm-cancel" id="confirm-cancel">取消</div><div class="confirm-ok" id="confirm-ok">确认</div></div></div>';
+					confirmShow(confirmStr);
+				} else {
+					// 无三方账号
+					var confirmStr = '<div class="animated zoomIn faster win-box confirm">'+
+						'<div class="border-bottom-1px confirm-content">'+
+							'确认将券码：<span>' + codeVal + ' </span>'+
+							'兑换至手机号号码：<span>' + phoneVal + '</span> 吗？</div>'+
+						'<div class="confirm-btn"><div class="confirm-cancel" id="confirm-cancel">取消</div><div class="confirm-ok" id="confirm-ok">确认</div></div></div>';
+					confirmShow(confirmStr);
+				}
+			})
+
+			// confirm 取消
+			$(document).on('click', '#confirm-cancel', function () {
+				maskeHide();
+			})
+            //确认
+			$(document).on('click', '#confirm-ok', function () {
+
+				toastShow('兑换中...', 'icon8', 'loading');
+
+				var data = {
+					phone: $('#phone input').val(),
+					serialNo: $('#code input').val(),
+				}
+                
+				// 有第三方账号时
+				if (needAccount == '1') {
+					data.thirdAccount = $('#account input').val();
+				}
+                
+				$.ajax({
+					type: 'post',
+					url: 'https://testing.tech.chongplus.cn/unicom-city-api/coupon/verify/exchange/' + $('#code input').val(),
+					data: data,
+					dataType: 'json',
+					success: function (res) {
+						// setTimeout(function () {
+						// 	if (res.success) {
+						// 		var text = '兑换操作已受理，最终兑换结果以短信形式通知您！请留意短信！'
+						// 		var confirmStr = '<div class="animated zoomIn faster win-box confirm"><div class="border-bottom-1px confirm-content"><h3>受理中...</h3>' + text + '</div><div class="confirm-btn"><div class="end-ok" id="end-ok">确认</div></div></div>';
+						// 		confirmShow(confirmStr);
+						// 	} else {
+						// 		toastShow(res.errorMsg, 'icon6', 'prompt');
+						// 	}
+						// }, 1000)
+						window.location.replace("success.html")
+					}, 
+					error: function () {
+						maskeHide();
+						setTimeout(function () {
+							toastNoNetworkShow();
+						}, 500)
+					}
+				})
+			})
+
+			// // 兑换已受理 -> 确认 -> 恢复页面初始状态
+			// $(document).on('click', '#end-ok', function () {
+			// 	// 关闭遮罩
+			// 	maskeHide();
+
+			// 	// 兑换码恢复可输入状态
+			// 	$('#code input').removeAttr('readonly').val('');
+
+			// 	// 显示校验按钮
+			// 	$('#check-code').show();
+
+			// 	// 隐藏兑换按钮
+			// 	$('#exchange').hide();
+
+			// 	// 隐藏手机输入
+			// 	$('#phone').hide().find('input').val('');
+
+			// 	// 如果有第三方账号也隐藏
+			// 	if (needAccount == '1') {
+			// 		$('#account').html('').hide();
+			// 	}
+
+			// 	// 隐藏提示
+			// 	$('.tips').html('').hide();
+			// })
+		})
+	</script>
+</body>
+</html>

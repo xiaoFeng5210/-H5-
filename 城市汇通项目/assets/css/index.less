@@ -1,0 +1,393 @@
+// out: index.css, compress: true
+// rem
+@rem: 750 / 10 / 1rem;
+
+// input border color
+@borderColor: #FBC037;
+
+// border-bottom
+.border-bottom-1px {
+  position: relative;
+  &::after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background:rgba(0, 0, 0, .15);
+    width: 100%;
+    height: 1px;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    pointer-events: none; /* 防止点击触发 */
+    box-sizing: border-box;
+    @media screen and (min-device-pixel-ratio:3),(-webkit-min-device-pixel-ratio:3){
+      -webkit-transform: scaleY(0.33);
+      transform: scaleY(0.33);
+    }
+  }
+}
+
+// border-right
+.border-right-1px {
+  position: relative;
+  border: none;
+  &::after {
+    content: ' ';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background:rgba(0, 0, 0, .15);
+    width: 1px;
+    height: 100%;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+    -webkit-transform-origin: bottom right;
+    transform-origin: bottom right;
+    pointer-events: none; /* 防止点击触发 */
+    box-sizing: border-box;
+    @media screen and (min-device-pixel-ratio:3),(-webkit-min-device-pixel-ratio:3){
+      -webkit-transform: scaleX(0.33);
+      transform: scaleX(0.33);
+    }
+  }
+}
+
+// 1px border
+.border-1px {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200%;
+    border: 1px solid rgba(209,209,209,1);
+    height: 200%;
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    pointer-events: none; /* 防止点击触发 */
+    box-sizing: border-box;
+    border-radius: 30 / @rem;
+    box-shadow: 0 0 30 / @rem rgba(255, 255, 255, .4);
+    @media screen and (min-device-pixel-ratio:3),(-webkit-min-device-pixel-ratio:3){
+      width: 300%;
+      height: 300%;
+      -webkit-transform: scale(0.33);
+      transform: scale(0.33);
+    }
+  }
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background: white;
+  font-family: -apple-system-font;
+}
+img {
+  border: 0;
+}
+// 背景
+#app {
+  width: 100%;
+  height:100%
+ 
+  // 
+}
+// 内容区
+.content {
+  .head{
+    width:100vw;
+  }
+  // input 块
+  .input-block {
+    width: 590 / @rem;
+    height: 90 / @rem;
+    margin: 0 auto 35 / @rem auto;
+    margin-top:8.7vw;
+    display: -webkit-box;
+    display: flex;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    // icon
+    span {
+      width: 92 / @rem;
+      height: 40 / @rem;
+      margin-top: 25 / @rem;
+      border-right: 1 / @rem solid rgba(255, 255, 255, .4);
+    }
+    // input
+    input {
+      outline: none;
+      flex: 1;
+      height: 90 / @rem;
+      line-height: 45 / @rem;
+      color:black;
+      font-size: 29 / @rem;
+      padding: 0 30 / @rem;
+      border:1px solid rgba(209,209,209,1);
+      // border-color: #D1D1D1;
+      border-radius:5px;
+      background: none;
+      box-sizing: border-box;
+      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #999999;
+      }
+      ::-moz-placeholder { /* Firefox 19+ */
+        color: #999999;
+      }
+      :-ms-input-placeholder { /* IE 10+ */
+        color: #999999;
+      }
+      :-moz-placeholder { /* Firefox 18- */
+        color: #999999;
+      }
+    }
+  }
+  // 不同icon
+  .code span {
+    background: url(../img/icon1.png) center center no-repeat / 35 / @rem 24 / @rem;
+  }
+  .phone span {
+    background: url(../img/icon2.png) center center no-repeat / 24 / @rem 36 / @rem;
+  }
+  .account .qq-icon {
+    background: url(../img/icon3.png) center center no-repeat / 30 / @rem 34 / @rem;
+  }
+  .account .weibo-icon {
+    background: url(../img/weibo.png) center center no-repeat / 34 / @rem 34 / @rem;
+  }
+  // 账号输入提示
+  .tips {
+    width: 590 / @rem;
+    height: auto;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: flex;
+    align-items: flex-start;
+    span {
+      display: block;
+      &:first-child {
+        width: 30 / @rem;
+        display: block;
+        height: 30 / @rem;
+        overflow: hidden;
+        line-height: 54 / @rem;
+        color: red;
+        font-size: 42 / @rem;
+      }
+      &:last-child {
+        margin-left: 14 / @rem;
+        color: rgba(255, 255, 255, .37);
+        font-size: 25 / @rem;
+      }
+    }
+  }
+
+  // button
+  .btn {
+    width: 590 / @rem;
+    height: 90 / @rem;
+    margin: 30 / @rem auto 80 / @rem auto;
+    background: linear-gradient(0deg,rgba(207,168,110,1),rgba(224,197,145,1));;
+    border-radius: 15 / @rem;
+    line-height: 90 / @rem;
+    text-align: center;
+    color: #7D5924;
+    letter-spacing: 10 / @rem;
+    font-size: 33 / @rem;
+    box-shadow: 0 0 30 / @rem rgba(255, 255, 255, .4);
+    margin-top:8.53vw;
+  }
+  // 活动规则
+  .rules {
+    width: 590 / @rem;
+    margin: 0 auto;
+    // 活动title
+    .title {
+      height: 50 / @rem;
+      display: -webkit-box;
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      box-sizing: border-box;
+      span {
+        display: flex;
+        align-items: center;
+        img {
+          height: 16 / @rem;
+        }
+        &:nth-child(2) {
+          margin: 0 20 / @rem;
+          color: #CEA20F;
+          font-size: 34 / @rem;
+        }
+      }
+    }
+    // 活动规则列表
+    .list {
+      width: 590 / @rem;
+      margin: 0 auto;
+      margin-top: 52 / @rem;
+      // &：:first-child{
+      //   color:black;
+      //   font-weight: bold;
+      // }
+      .title-mix{
+        font-size:3.2vw;
+        font-weight: bold;
+        color:#666666;
+        margin-bottom: 2vw;
+      }
+      p {
+        margin: 0 0 20 / @rem 0;
+        font-size: 3.2vw;
+        color: #999999;
+      }
+      
+    }
+  }
+}
+
+// 遮罩层
+.maske,
+.no-network-maske {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .5);
+  display: -webkit-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .toast,
+  .no-network-toast {
+    min-width: 417 / @rem;
+    height: 325 / @rem;
+    padding: 64 / @rem 30 / @rem 73 / @rem 30 / @rem;
+    background: #fff;
+    border-radius: 10 / @rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    .icon {
+      height: 94 / @rem;
+      img {
+        height: 94 / @rem;
+      }
+    }
+    .text {
+      color: #434343;
+      margin-top: 63 / @rem;
+      font-size: 33 / @rem;
+      text-align: center;
+    }
+  }
+  // 加载中
+  .loading {
+    img {
+      -webkit-animation: rotate 1.5s infinite linear;
+      -o-animation: rotate 1.5s infinite linear;
+      animation: rotate 1.5s infinite linear;
+    }
+  }
+
+  // confirm
+  .confirm {
+    width: 579 / @rem;
+    min-height: 359 / @rem;
+    background: #fff;
+    border-radius: 10 / @rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    .confirm-content {
+      font-family: PingFangSC-Regular;
+      width: 100%;
+      min-height: 260 / @rem;
+      padding: 54 / @rem 44 / @rem;
+      box-sizing: border-box;
+      font-size: 15px;
+      color: #000000;
+      line-height: 50 / @rem;
+      span {
+        color: #B02525;
+      }
+      h3 {
+        height: 40 / @rem;
+        line-height: 40 / @rem;
+        font-size: 38 / @rem;
+        text-align: center;
+        margin: 0 0 54 / @rem;
+      }
+    }
+    //确认框的取消确定按钮
+    .confirm-btn {
+      width: 70%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 98 / @rem;
+      box-sizing: border-box;
+      div {
+        width:21.6vw;
+        border:1px solid rgba(199,163,107,1);
+        height: 9.86vw;
+        line-height: 9.86vw;
+        text-align: center;
+        font-size: 15px;
+        border-radius:5px;
+      }
+      .confirm-cancel {
+        color: #C7A36B;
+        background-color:#FFFFFF;
+        // border-right: 1 / @rem solid rgba(0, 0, 0, .15);
+      }
+      .confirm-ok,
+      .end-ok {
+        color: #FFFFFF;
+        background-color:#C7A36B;
+      }
+    }
+  }
+}
+
+// loading 动画
+@keyframes -webkit-rotate {
+  0%{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  0%{
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+  }
+}
